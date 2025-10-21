@@ -19,13 +19,13 @@ pipeline {
 
        stage('Run Selenium Tests') {
     steps {
+
         echo '🧪 Running Selenium tests with Pytest...'
-        // Create reports folder if it doesn't exist
         bat 'if not exist reports mkdir reports'
-        // Run tests from guru99/tests and generate report in reports/
-        bat 'pytest Guru99BankAutomation/tests/ --html=reports/report.html --self-contained-html'
+        bat 'python -m pytest Guru99BankAutomation/tests/ --html=reports/report.html --self-contained-html'
     }
 }
+
 
         stage('Publish Report') {
             steps {
