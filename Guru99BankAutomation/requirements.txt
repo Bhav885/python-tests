@@ -1,0 +1,8 @@
+selenium==4.37.0
+webdriver-manager==4.0.2
+pytest==8.4.2
+pytest-xdist
+openpyxl
+allure-pytest
+pandas
+requests
