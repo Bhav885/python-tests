@@ -13,14 +13,15 @@ pipeline {
             steps {
                 echo '🐍 Installing dependencies...'
                 bat 'python -m pip install --upgrade pip'
-                bat 'pip install -r requirements.txt'
+                bat 'pip install -r Guru99BankAutomation/requirements.txt'
             }
         }
 
         stage('Run Selenium Tests') {
             steps {
-                echo '🧪 Running Pytest with Selenium...'
-                bat 'pytest --html=reports/report.html --self-contained-html'
+                echo '🧪 Running Selenium tests with Pytest...'
+                // Ensure report is generated in the root reports/ folder
+                bat 'pytest Guru99BankAutomation/tests/ --html=reports/report.html --self-contained-html'
             }
         }
 
