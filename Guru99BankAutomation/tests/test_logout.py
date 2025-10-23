@@ -27,3 +27,4 @@ def test_logout(setup):
     wait = WebDriverWait(driver, 10)
     login_button = wait.until(EC.visibility_of_element_located((By.NAME, "btnLogin")))
     assert login_button.is_displayed()
+
