@@ -28,6 +28,6 @@ jobs:
           pip install allure-pytest selenium
 
       - name: Run tests
-        run: pytest tests/ --alluredir=reports
+        run: pytest Guru99BankAutomation/tests/ --alluredir=reports
 
 
