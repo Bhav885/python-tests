@@ -164,7 +164,7 @@ jobs:
     - name: Run Selenium Tests on Chrome
       run: |
         # Force using Chrome only
-        pytest Guru99BankAutomation/tests/ --maxfail=1 --disable-warnings -q
+        python -m pytest Guru99BankAutomation/tests/ --maxfail=1 --disable-warnings -q
       env:
         BROWSER: chrome
 
