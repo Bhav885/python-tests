@@ -129,6 +129,47 @@
 #        run: |
 #          Xvfb :99 -screen 0 1920x1080x24 &
 #          pytest Guru99BankAutomation/tests/ --capture=no --maxfail=1 --tb=short
+#
+
+
+#name: Python Selenium Tests
+#
+#on:
+#  push:
+#    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+#
+#jobs:
+#  selenium-tests:
+#    runs-on: windows-latest
+#
+#    strategy:
+#      matrix:
+#        python-version: [3.11]
+#
+#    steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v3
+#
+#    - name: Set up Python
+#      uses: actions/setup-python@v4
+#      with:
+#        python-version: ${{ matrix.python-version }}
+#
+#    - name: Install dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        pip install -r requirements.txt
+#        pip install selenium webdriver-manager pandas
+#
+#    - name: Run Selenium Tests on Chrome
+#      run: |
+#        # Force using Chrome only
+#        python -m pytest Guru99BankAutomation/tests/ --maxfail=1 --disable-warnings -q
+#      env:
+#        BROWSER: chrome
+
 
 name: Python Selenium Tests
 
@@ -147,26 +188,28 @@ jobs:
         python-version: [3.11]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      # Step 2: Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install selenium webdriver-manager pandas
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest selenium webdriver-manager pandas openpyxl
 
-    - name: Run Selenium Tests on Chrome
-      run: |
-        # Force using Chrome only
-        python -m pytest Guru99BankAutomation/tests/ --maxfail=1 --disable-warnings -q
-      env:
-        BROWSER: chrome
+      # Step 4: Run Selenium tests on Chrome
+      - name: Run Selenium Tests
+        run: python -m pytest Guru99BankAutomation/tests/ --maxfail=1 --disable-warnings -q
+        env:
+          BROWSER: chrome
+
 
 
 
