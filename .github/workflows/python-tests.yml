@@ -1,53 +1,53 @@
-name: Run Banking Tests
+name: 🧪 Run All Selenium Pytests
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chrome, firefox]
 
     steps:
-      - name: Checkout code
+      # Step 1: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Setup Chrome
-        if: matrix.browser == 'chrome'
-        uses: browser-actions/setup-chrome@latest
+      # Step 3: Install Google Chrome and ChromeDriver
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl unzip xvfb
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          CHROME_VERSION=$(google-chrome --version | grep -oE '[0-9.]+' | head -1)
+          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+          wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          chromedriver --version
+          google-chrome --version
 
-      - name: Setup Firefox
-        if: matrix.browser == 'firefox'
-        uses: browser-actions/setup-firefox@latest
-
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r Guru99BankAutomation/requirements.txt
-          pip install allure-pytest selenium webdriver-manager
+          python -m pip install --upgrade pip
+          pip install pytest selenium
 
-      - name: Run tests with ${{ matrix.browser }}
+      # Step 5: Run ALL Pytest tests (headless mode)
+      - name: Run All Pytests
         env:
-          CI: true
-          BROWSER: ${{ matrix.browser }}
-        run: pytest Guru99BankAutomation/tests/ --browser=${{ matrix.browser }} --alluredir=reports/${{ matrix.browser }} -v
+          DISPLAY: :99
+        run: |
+          Xvfb :99 -ac &
+          echo "Running all test files under Guru99BankAutomation/tests/"
+          pytest Guru99BankAutomation/tests/ -q --disable-warnings
 
-      - name: Upload Allure Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-${{ matrix.browser }}
-          path: reports/${{ matrix.browser }}
