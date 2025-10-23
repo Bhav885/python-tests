@@ -1,5 +1,4 @@
 import pytest
-from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -8,14 +7,11 @@ from pages.guru_login_page import GuruLoginPage
 from pages.guru_home_page import GuruHomePage
 from pages.guru_new_account_page import GuruNewAccountPage
 
-@pytest.fixture
-def driver():
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    yield driver
-    driver.quit()
 
-def test_create_new_account(driver):
+def test_create_new_account(setup):
+    """Test account creation using global setup fixture"""
+    driver = setup
+
     # Step 1: Login
     login_page = GuruLoginPage(driver)
     login_page.open()
