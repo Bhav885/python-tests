@@ -11,6 +11,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
 
     steps:
       - name: Checkout code
@@ -21,22 +25,29 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Setup Chrome
+        if: matrix.browser == 'chrome'
+        uses: browser-actions/setup-chrome@latest
 
-      - name: Install Firefox
-        run: |
-          sudo apt-get install -y firefox
+      - name: Setup Firefox
+        if: matrix.browser == 'firefox'
+        uses: browser-actions/setup-firefox@latest
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r Guru99BankAutomation/requirements.txt
-          pip install allure-pytest selenium
+          pip install allure-pytest selenium webdriver-manager
 
-      - name: Run tests
+      - name: Run tests with ${{ matrix.browser }}
         env:
           CI: true
-        run: pytest Guru99BankAutomation/tests/ --alluredir=reports --browser=chrome
+          BROWSER: ${{ matrix.browser }}
+        run: pytest Guru99BankAutomation/tests/ --browser=${{ matrix.browser }} --alluredir=reports/${{ matrix.browser }} -v
+
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results-${{ matrix.browser }}
+          path: reports/${{ matrix.browser }}
