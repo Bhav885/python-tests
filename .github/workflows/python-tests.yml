@@ -310,47 +310,59 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
-  build:
+  selenium-tests:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      # 1. Checkout your code
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
+      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
-
-      - name: Install Dependencies
+      # 3. Upgrade pip and install dependencies
+      - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r Guru99BankAutomation/requirements.txt
-          pip install selenium webdriver-manager pandas pytest allure-pytest
 
-      - name: Create Allure Results Directory
-        run: mkdir allure-results
-
-      - name: Run Selenium Tests
+      # 4. Create folders for Allure results and report
+      - name: Prepare Allure directories
         run: |
-          python -m pytest Guru99BankAutomation/tests/ --disable-warnings -q --alluredir=allure-results
+          if not exist allure-results mkdir allure-results
+          if not exist allure-report mkdir allure-report
+
+      # 5. Run Selenium tests with Allure output
+      - name: Run Selenium Tests
+        run: python -m pytest Guru99BankAutomation/tests/ --disable-warnings -q --alluredir=allure-results
         continue-on-error: true
 
+      # 6. Generate Allure report
       - name: Generate Allure Report
         run: |
-          mkdir -p allure-report
-          allure generate allure-results --clean -o allure-report
+          pip install allure-pytest
+          allure generate allure-results -o allure-report --clean || echo "No results to generate"
 
-      - name: Upload Allure Report Artifact
+      # 7. Upload Allure Results (raw JSON files)
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+      # 8. Upload Allure HTML Report
+      - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
+
 
 
 
