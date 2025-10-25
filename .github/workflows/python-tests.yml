@@ -321,10 +321,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -334,32 +334,30 @@ jobs:
           pip install -r requirements.txt
           pip install selenium webdriver-manager pandas pytest allure-pytest
 
-      - name: Verify pytest and allure plugins
-        run: |
-          pytest --version
-          pytest --trace-config | findstr allure || echo "⚠️ Allure plugin not loaded!"
-
       - name: Run Selenium Tests and Generate Allure Results
+        shell: pwsh
         run: |
           mkdir allure-results
           pytest Guru99BankAutomation/tests/ --alluredir=allure-results --disable-warnings -v || echo "Tests failed but continuing..."
-          dir allure-results
+          Get-ChildItem allure-results
         env:
           BROWSER: chrome
 
       - name: Install Allure Commandline
-        run: |
-          npm install -g allure-commandline
+        run: npm install -g allure-commandline
 
       - name: Generate Allure Report
         shell: pwsh
         run: |
           allure generate "$(Resolve-Path allure-results)" --clean -o "$(Resolve-Path allure-report)"
+          Get-ChildItem allure-report
+
       - name: Upload Allure Report Artifact
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
+
 
 
 
