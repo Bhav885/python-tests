@@ -26,7 +26,13 @@ class BankAccount:
 
     def get_balance(self):
         """Return the current balance"""
-        return self.balance
+        return round(self.balance, 2)   # ✅ UPDATED (previously: return self.balance)
+
+    def display_account_info(self):
+        """✅ NEW METHOD"""
+        print(f"Account Number: {self.account_number}")
+        print(f"Holder Name: {self.holder_name}")
+        print(f"Balance: {self.balance}")
 
 
 class SavingsAccount(BankAccount):
@@ -58,9 +64,10 @@ if __name__ == "__main__":
         print("2. Withdraw")
         print("3. Add Interest")
         print("4. Check Balance")
-        print("5. Exit")
+        print("5. Display Account Info")   # ✅ NEW OPTION
+        print("6. Exit")
 
-        choice = input("Enter your choice (1-5): ")
+        choice = input("Enter your choice (1-6): ")
 
         if choice == "1":
             amt = float(input("Enter amount to deposit: "))
@@ -77,8 +84,11 @@ if __name__ == "__main__":
             print(f"Current Balance: {account.get_balance()}")
 
         elif choice == "5":
+            account.display_account_info()   # ✅ NEW FUNCTION CALL
+
+        elif choice == "6":
             print("Thank you for banking with us!")
             break
 
         else:
-            print("Invalid choice! Please select between 1-5.")
+            print("Invalid choice! Please select between 1-6.")
