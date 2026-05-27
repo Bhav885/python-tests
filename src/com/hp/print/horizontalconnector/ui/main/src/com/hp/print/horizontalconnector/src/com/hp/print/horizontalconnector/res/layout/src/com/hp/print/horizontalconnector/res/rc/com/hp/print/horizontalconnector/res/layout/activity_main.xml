@@ -1,0 +1,7 @@
+<!-- Add this FrameLayout to the main layout where the chat UI should appear -->
+<FrameLayout
+    android:id=\"@+id/copilot_chat_container\"
+    android:layout_width=\"match_parent\"
+    android:layout_height=\"300dp\"
+    android:layout_gravity=\"bottom\"
+    android:visibility=\"visible\"/
