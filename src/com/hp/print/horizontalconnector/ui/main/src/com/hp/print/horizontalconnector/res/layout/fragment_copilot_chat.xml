@@ -1,0 +1,45 @@
+<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"
+    android:id=\"@+id/copilot_chat_root\"
+    android:layout_width=\"match_parent\"
+    android:layout_height=\"match_parent\"
+    android:orientation=\"vertical\"
+    android:padding=\"16dp\">
+ 
+    <android.support.v7.widget.RecyclerView
+        android:id=\"@+id/copilot_chat_recycler_view\"
+        android:layout_width=\"match_parent\"
+        android:layout_height=\"0dp\"
+        android:layout_weight=\"1\"
+        android:overScrollMode=\"never\"
+        android:scrollbars=\"vertical\" />
+ 
+    <ProgressBar
+        android:id=\"@+id/copilot_chat_progress\"
+        android:layout_width=\"wrap_content\"
+        android:layout_height=\"wrap_content\"
+        android:layout_gravity=\"center\"
+        android:visibility=\"gone\" />
+ 
+    <LinearLayout
+        android:layout_width=\"match_parent\"
+        android:layout_height=\"wrap_content\"
+        android:orientation=\"horizontal\"
+        android:layout_marginTop=\"8dp\">
+ 
+        <EditText
+            android:id=\"@+id/copilot_chat_input\"
+            android:layout_width=\"0dp\"
+            android:layout_height=\"wrap_content\"
+            android:layout_weight=\"1\"
+            android:hint=\"@string/copilot_chat_hint\"
+            android:imeOptions=\"actionSend\"
+            android:singleLine=\"true\" />
+ 
+        <Button
+            android:id=\"@+id/copilot_chat_send\"
+            android:layout_width=\"wrap_content\"
+            android:layout_height=\"wrap_content\"
+            android:text=\"@string/copilot_chat_send\" />
+</LinearLayout>
+</LinearLayout>
